@@ -1,126 +1,128 @@
 # OnePage Diagrams
 
-把 Obsidian 里的 Mermaid 图换成 [Pele](https://pele.run) 渲染，并套一层与 [OnePage](https://github.com/ivaneye/OnePage) 主题相配的配色。
+Render Mermaid diagrams in Obsidian with [Pele](https://pele.run), styled to match the [OnePage](https://github.com/ivaneye/OnePage) theme.
 
-> **这是临时方案。** Obsidian 1.15 起官方内置 Pele 渲染，届时本插件不再接管 mermaid 代码块，可以直接卸载；配色会在 OnePage 主题的后续版本里接管。插件本身不上架社区插件市场，只从 GitHub 下载安装。
+English | [中文](README_CN.md)
 
-## 解决什么
+> **This is a stopgap.** Obsidian 1.15 ships Pele natively. Once it lands, this plugin stops taking over `mermaid` blocks and you can uninstall it; the palette will move into the OnePage theme. The plugin is not submitted to the community store — install from GitHub only.
 
-Obsidian 自带的 Mermaid 渲染有三个问题：
+## What it fixes
 
-**慢。** 每张图都要跑完整的 mermaid 解析与布局，一页里有五六张图时，滚动会明显卡。
+Obsidian's built-in Mermaid rendering has three problems:
 
-**窄栏下缩得看不清。** 横向流程图在侧栏或窄分屏里会被压成一条，字小到无法读。
+**Slow.** Every diagram runs the full Mermaid parser and layout engine. A note with five or six diagrams scrolls noticeably worse than one with none.
 
-**配色跟主题不搭。** 默认的 Mermaid 主题是冷灰蓝，放在暖白纸张这类主题里像贴上去的一层。
+**Unreadable in narrow panes.** A horizontal flowchart squeezed into a sidebar or a narrow split collapses into a strip of unreadable text.
 
-换成 Pele 之后，渲染快很多，图是干净的 SVG；插件再补三件事：图太宽时自动改竖排、右下角给缩放按钮、把配色接到主题变量上。
+**Off-palette.** The default Mermaid theme is cool blue-grey, which looks pasted on inside warm themes like OnePage.
 
-## 安装
+Pele renders to clean SVG and is much faster. This plugin adds three things on top: automatic vertical re-flow when the pane is too narrow, zoom controls in the corner, and a palette wired to theme variables.
 
-本插件不上架社区市场，两种装法：
+## Install
 
-**一、下载目录包（推荐）**
+Not in the community store. Two options:
 
-1. 到 [Releases](https://github.com/ivaneye/onepage-diagrams/releases) 下载 `onepage-diagrams-x.y.z.zip`
-2. 解压后得到 `onepage-diagrams` 文件夹
-3. 整个文件夹放进 `<你的仓库>/.obsidian/plugins/`
-4. 重启 Obsidian，在「设置 → 第三方插件」里启用 **OnePage Diagrams**
+**1. Download the packaged folder (recommended)**
 
-**二、用 BRAT**
+1. Grab `onepage-diagrams-x.y.z.zip` from [Releases](https://github.com/ivaneye/onepage-diagrams/releases)
+2. Unzip it to get an `onepage-diagrams` folder
+3. Move that folder into `<your vault>/.obsidian/plugins/`
+4. Restart Obsidian, then enable **OnePage Diagrams** under Settings → Community plugins
 
-装了 [BRAT](https://github.com/TfTHacker/obsidian42-brat) 的话，添加仓库 `ivaneye/onepage-diagrams` 即可。
+**2. BRAT**
 
-## 用法
+With [BRAT](https://github.com/TfTHacker/obsidian42-brat) installed, add `ivaneye/onepage-diagrams` as a beta plugin.
 
-启用后，笔记里原有的 ```` ```mermaid ```` 代码块自动改用 Pele 渲染，源码一行不用改。
+## Usage
 
-想只让新图走 Pele、老图不动，把设置里的「接管 mermaid 代码块」关掉，然后用 ```` ```pele ```` 写新图：
+Once enabled, existing ```` ```mermaid ```` blocks render through Pele. No source changes needed.
+
+To keep old diagrams on the built-in renderer, turn off "Take over mermaid code blocks" in settings and write new diagrams as ```` ```pele ````:
 
 ````markdown
 ```pele
 flowchart TB
-    A["起点"] --> B["中间"]
+    A["Start"] --> B["Middle"]
 ```
 ````
 
-两种写法的语法完全一样，都是 Mermaid 语法。
+Both fences use the same Mermaid syntax.
 
-## 设置
+## Settings
 
-| 项 | 说明 |
+| Setting | Description |
 | --- | --- |
-| 接管 mermaid 代码块 | 关掉后只渲染 `pele` 代码块 |
-| 字号 | 0 跟随主题，整图偏小时填 14 或 15 |
-| 窄栏自动转竖向 | 容器比图窄时把 `LR` 改成 `TB` |
-| 图表配色 | 自动（OnePage 主题时套用）/ 强制 OnePage 配色 / Pele 默认 |
-| 允许缩放 | 右下角加 `+ / − / ⤢`，Ctrl 或 Cmd 加滚轮缩放 |
-| 本地包 | 把 Pele 存到插件目录，离线可用 |
+| Take over mermaid blocks | Off = only `pele` fences render through Pele |
+| Font size | 0 follows the theme; try 14–15 for dense diagrams |
+| Auto vertical re-flow | Flips `LR` to `TB` when the pane is narrower than the diagram |
+| Diagram palette | Auto (applies OnePage palette when that theme is active) / Force OnePage / Pele default |
+| Enable zoom | Adds `+ / − / ⤢` in the corner; Ctrl or Cmd + wheel zooms |
+| Local bundle | Saves Pele into the plugin folder for offline use |
 
-切换「接管」之后要执行命令面板里的「重载插件」才生效，其余设置即时重绘。
+Toggling "Take over" requires running the **Reload plugin** command. Other settings re-render immediately.
 
-## 配色是怎么来的
+## How the palette works
 
-所有颜色都取主题变量，不写死色值：
+Every color comes from theme variables; nothing is hard-coded:
 
-| 图里的位置 | 取的变量 |
+| Element | Variable |
 | --- | --- |
-| 页面底、元素底 | `--background-primary` |
-| 层带底 | `--background-secondary` 兑六成页面色 |
-| 层带外框 | `--text-muted` 26% |
-| 元素描边 | `--text-muted` 30% |
-| 元素文字 | `--text-muted` 与 `--text-normal` 混色 |
-| 层带标题 | `--text-normal`，13px，500 |
-| 重点节点与主链路 | `--text-accent` |
+| Page and node fill | `--background-primary` |
+| Container (subgraph) fill | `--background-secondary` mixed 60% with the page color |
+| Container border | `--text-muted` at 26% |
+| Node border | `--text-muted` at 30% |
+| Node text | `--text-muted` blended with `--text-normal` |
+| Container title | `--text-normal`, 13px, 500 |
+| Highlighted node and main path | `--text-accent` |
 
-所以改主题的强调色、切明暗，图会跟着变。
+Change the accent color or switch light/dark and the diagrams follow.
 
-想给某个节点加标签样式，在源码里写 `:::key`：
+To tag a node, add `:::key` in the source:
 
 ```pele
 flowchart LR
-    A["普通节点"] --> B["卡点：销售审批"]:::key
+    A["Plain node"] --> B["Blocker: sales approval"]:::key
 ```
 
-## 支持的写法
+## Supported
 
-- 流程图 `flowchart` / `graph`，八种节点形状、子图、子图嵌套
-- 连线：`-->` `==>` `-.->` `---` `<-->`，都支持标签
-- 时序图、甘特图、饼图、状态图等 Pele 支持的图类型
-- `classDef`、`curve`（`step` 是直角折线）
+- `flowchart` / `graph`: eight node shapes, subgraphs, nested subgraphs
+- Edges: `-->` `==>` `-.->` `---` `<-->`, with labels
+- Sequence, Gantt, pie, state diagrams — anything Pele supports
+- `classDef`, `curve` (`step` gives right-angled connectors)
 
-不支持：
+Not supported:
 
-| 项 | 说明 |
+| Item | Note |
 | --- | --- |
-| `themeVariables` | Pele 不读，颜色走 CSS 变量 |
-| 子图内 `direction` | 子图内部由 Pele 自己排 |
-| `<small>` 一类 HTML | 只认换行、粗体、斜体 |
-| 子图 `style fill` | 层带颜色只能整体换 |
+| `themeVariables` | Pele ignores it; colors go through CSS variables |
+| `direction` inside a subgraph | Pele lays out subgraph contents itself |
+| `<small>` and similar HTML | Line breaks, bold, italic only |
+| `style fill` on a subgraph | Container color is global |
 
-## 卸载与迁移
+## Uninstall and migrate
 
-Obsidian 1.15 之后：
+After Obsidian 1.15:
 
-1. 设置 → 第三方插件 → 停用并卸载本插件
-2. 图会自动交给官方 Pele 渲染，语法不用改
-3. 新版 OnePage 主题会带上同一套配色
+1. Settings → Community plugins → disable and uninstall this plugin
+2. Diagrams fall back to the built-in Pele renderer; syntax is unchanged
+3. A later OnePage theme release carries the same palette
 
-插件检测到 Obsidian 版本 ≥ 1.15 时会自动停止接管，避免和官方渲染重复。
+The plugin detects Obsidian ≥ 1.15 and stops taking over automatically, so it never double-renders against the native engine.
 
-## 开发
+## Development
 
-没有构建步骤，`main.js` 就是源码：
+No build step — `main.js` is the source:
 
 ```
-main.js       插件主体
-styles.css    配色与结构样式
-manifest.json 插件清单
-versions.json 版本对照，给 BRAT 用
+main.js       plugin entry
+styles.css    palette and structural CSS
+manifest.json plugin manifest
+versions.json version map for BRAT
 ```
 
-改完直接重载插件即可。打包用 `./build-zip.sh`，产物是与插件同名的 zip，解压即用。
+Reload the plugin after editing. `./build-zip.sh` produces a versioned zip that unzips straight into `.obsidian/plugins/`.
 
-## 许可
+## License
 
-MIT。渲染引擎 [Pele](https://github.com/obsidianmd/pele) 同样是 MIT，作者 kepano。
+MIT. The rendering engine, [Pele](https://github.com/obsidianmd/pele), is MIT as well, by kepano.

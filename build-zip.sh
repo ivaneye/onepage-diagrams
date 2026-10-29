@@ -7,7 +7,7 @@ VERSION=$(python3 -c "import json;print(json.load(open('manifest.json'))['versio
 NAME="onepage-diagrams-${VERSION}"
 STAGE=$(mktemp -d)
 mkdir -p "${STAGE}/onepage-diagrams"
-cp main.js manifest.json styles.css versions.json README.md LICENSE "${STAGE}/onepage-diagrams/"
+cp main.js manifest.json styles.css versions.json README.md README_CN.md LICENSE "${STAGE}/onepage-diagrams/"
 [ -d vendor ] && cp -R vendor "${STAGE}/onepage-diagrams/"
 
 rm -f "${NAME}.zip"
