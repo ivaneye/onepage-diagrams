@@ -73,7 +73,7 @@ flowchart TB
 | 元素描边 | `--text-muted` 30% |
 | 元素文字 | `--text-muted` 与 `--text-normal` 混色 |
 | 层带标题 | `--text-normal`，13px，500 |
-| 重点节点与主链路 | `--text-accent` |
+| 重点节点、主链路、时序图关键框 | `--text-accent` |
 
 所以改主题的强调色、切明暗，图会跟着变。
 
@@ -84,11 +84,22 @@ flowchart LR
     A["普通节点"] --> B["卡点：销售审批"]:::key
 ```
 
+时序图的重点用 `critical` 块圈住必须成功的步骤，框里有 6% 强调色淡底：
+
+```pele
+sequenceDiagram
+    Agent->>MCP: initiateProjectApproval
+    critical 关键：发起前校验状态
+        MCP->>MCP: 服务端状态校验
+    end
+```
+
 ## 支持的写法
 
 - 流程图 `flowchart` / `graph`，八种节点形状、子图、子图嵌套
 - 连线：`-->` `==>` `-.->` `---` `<-->`，都支持标签
 - 时序图、甘特图、饼图、状态图等 Pele 支持的图类型
+- 时序图的 `critical … option … end` 强调块，框线与标题跟强调色
 - `classDef`、`curve`（`step` 是直角折线）
 
 不支持：
@@ -96,7 +107,7 @@ flowchart LR
 | 项 | 说明 |
 | --- | --- |
 | `themeVariables` | Pele 不读，颜色走 CSS 变量 |
-| 子图内 `direction` | 子图内部由 Pele 自己排 |
+| 子图内 `direction` | 能用：写 `direction LR` 让层带内节点横排 |
 | `<small>` 一类 HTML | 只认换行、粗体、斜体 |
 | 子图 `style fill` | 层带颜色只能整体换 |
 

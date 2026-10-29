@@ -1,7 +1,7 @@
 {
   "id": "onepage-diagrams",
   "name": "OnePage Diagrams",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "minAppVersion": "1.5.0",
   "description": "用 Pele 渲染 Mermaid，并套一层与 OnePage 主题相配的暖白纸张配色。Obsidian 1.15 内置 Pele 后可卸载。",
   "author": "wangyifan",

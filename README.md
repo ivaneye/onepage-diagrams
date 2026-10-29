@@ -73,7 +73,7 @@ Every color comes from theme variables; nothing is hard-coded:
 | Node border | `--text-muted` at 30% |
 | Node text | `--text-muted` blended with `--text-normal` |
 | Container title | `--text-normal`, 13px, 500 |
-| Highlighted node and main path | `--text-accent` |
+| Highlighted node, main path, sequence critical block | `--text-accent` |
 
 Change the accent color or switch light/dark and the diagrams follow.
 
@@ -84,11 +84,22 @@ flowchart LR
     A["Plain node"] --> B["Blocker: sales approval"]:::key
 ```
 
+In sequence diagrams, wrap the steps that must succeed in a `critical` block; the frame gets a 6% accent wash:
+
+```pele
+sequenceDiagram
+    Agent->>MCP: initiateProjectApproval
+    critical Key: validate state before starting
+        MCP->>MCP: server-side state check
+    end
+```
+
 ## Supported
 
 - `flowchart` / `graph`: eight node shapes, subgraphs, nested subgraphs
 - Edges: `-->` `==>` `-.->` `---` `<-->`, with labels
 - Sequence, Gantt, pie, state diagrams — anything Pele supports
+- `critical … option … end` blocks in sequence diagrams, drawn in the accent color
 - `classDef`, `curve` (`step` gives right-angled connectors)
 
 Not supported:
@@ -96,7 +107,7 @@ Not supported:
 | Item | Note |
 | --- | --- |
 | `themeVariables` | Pele ignores it; colors go through CSS variables |
-| `direction` inside a subgraph | Pele lays out subgraph contents itself |
+| `direction` inside a subgraph | Works: `direction LR` lays the contents out horizontally |
 | `<small>` and similar HTML | Line breaks, bold, italic only |
 | `style fill` on a subgraph | Container color is global |
 

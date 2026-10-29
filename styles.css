@@ -94,6 +94,24 @@
   fill: var(--text-accent, #0e6e63);
 }
 
+/* 时序图关键段：源码写 critical … end，框线与标题跟强调色 */
+.pele-render.pele-onepage .pele-frames .pele-frame-critical {
+  stroke: color-mix(in srgb, var(--text-accent, #0e6e63) 45%, transparent);
+}
+
+.pele-render.pele-onepage .pele-frame-critical > rect[fill='none'] {
+  fill: color-mix(in srgb, var(--text-accent, #0e6e63) 6%, transparent);
+}
+
+.pele-render.pele-onepage .pele-frame-critical > rect:not([fill='none']) {
+  fill: color-mix(in srgb, var(--text-accent, #0e6e63) 12%, transparent);
+}
+
+.pele-render.pele-onepage .pele-frame-critical .pele-frame-kind,
+.pele-render.pele-onepage .pele-frame-critical .pele-frame-label {
+  fill: var(--text-accent, #0e6e63) !important;
+}
+
 /* 连线标签的底框用页面色，只用来遮住穿过的线 */
 .pele-render .pele-edge-label rect {
   fill: var(--pele-bg, var(--background-primary)) !important;
