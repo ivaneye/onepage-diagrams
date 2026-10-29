@@ -119,6 +119,23 @@ function loadByScript(code) {
   });
 }
 
+// 阅读视图里源码已被 Obsidian 转成 SVG，只能从该 section 的原文里按顺序取围栏
+function collectMermaidSources(ctx, el) {
+  const out = [];
+  try {
+    const info = ctx && ctx.getSectionInfo ? ctx.getSectionInfo(el) : null;
+    const text = info && info.text ? info.text : '';
+    if (text) {
+      const re = /^[ \t]*```+[ \t]*mermaid[^\n]*\n([\s\S]*?)^[ \t]*```+[ \t]*$/gm;
+      let m;
+      while ((m = re.exec(text))) out.push(m[1].trim());
+    }
+  } catch (e) {
+    /* 取不到就跳过，保持 Obsidian 原样 */
+  }
+  return out;
+}
+
 async function renderInto(plugin, source, el) {
   const text = source.trim();
   if (!text) {
@@ -373,6 +390,23 @@ module.exports = class OnePageDiagramsPlugin extends Plugin {
       this.settings.takeOverMermaid = false;
       await this.saveSettings();
       new Notice('Obsidian 已内置 Pele 渲染，本插件不再接管 mermaid 代码块。可以卸载本插件，见插件说明。', 12000);
+    }
+
+    if (this.settings.takeOverMermaid) {
+      this.registerMarkdownPostProcessor((el, ctx) => {
+        if (!this.settings.takeOverMermaid) return;
+        const targets = [...el.querySelectorAll('.mermaid')].filter((m) => !m.closest('.pele-render'));
+        if (!targets.length) return;
+        const sources = collectMermaidSources(ctx, el);
+        targets.forEach((m, i) => {
+          const source = sources[i];
+          if (!source) return;
+          const host = document.createElement('div');
+          host.className = 'pele-render';
+          m.replaceWith(host);
+          renderInto(this, source, host);
+        });
+      });
     }
 
     if (this.settings.takeOverMermaid) {
