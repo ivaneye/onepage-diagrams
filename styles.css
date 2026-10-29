@@ -84,6 +84,19 @@
   font-weight: 400;
 }
 
+/* 时序图的 Note：跟重点节点同一套标签样式，两种图的「重点」长得一致 */
+.pele-render.pele-onepage .pele-note > rect {
+  rx: 8px !important;
+  fill: color-mix(in srgb, var(--text-accent, #0e6e63) 10%, transparent);
+  stroke: color-mix(in srgb, var(--text-accent, #0e6e63) 30%, transparent);
+  stroke-width: 1;
+}
+
+.pele-render.pele-onepage .pele-note > text,
+.pele-render.pele-onepage .pele-note .pele-label {
+  fill: var(--text-accent, #0e6e63) !important;
+}
+
 /* 主链路：Pele 的加粗连线（==>）连箭头一起染成强调色 */
 .pele-render.pele-onepage .pele-edge path[stroke-width] {
   stroke: var(--text-accent, #0e6e63);
