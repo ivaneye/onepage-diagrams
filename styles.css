@@ -1,0 +1,160 @@
+/* OnePage Diagrams — 给 Pele 渲染的图套一层「暖白纸张」样式
+   全部取主题变量，So 换主题、改强调色、切明暗都会自动跟随。
+   非 OnePage 主题下变量的兜底值也在，不至于变黑块。 */
+
+/* ---------- 容器 ---------- */
+
+.pele-render {
+  --pele-font: var(--font-text);
+  --pele-font-mono: var(--font-monospace);
+  --pele-radius: 10px;
+  margin: 0.8em 0;
+  overflow-x: auto;
+  position: relative;
+}
+
+.pele-render svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ---------- 配色预设（只在 .pele-onepage 时生效）----------
+   对应属性面板的取值：
+   卡片底 = 次级底兑六成页面色；外框 = 弱化色 26%
+   元素底 = 页面色；元素框 = 弱化色 30% */
+
+.pele-render.pele-onepage {
+  --pele-bg: var(--background-primary);
+  --pele-fg: color-mix(in srgb, var(--text-muted) 55%, var(--text-normal));
+  --pele-surface: var(--background-primary);
+  --pele-surface-alt: color-mix(in srgb, var(--background-secondary) 60%, var(--background-primary));
+  --pele-border: color-mix(in srgb, var(--text-muted) 26%, transparent);
+  --pele-line: color-mix(in srgb, var(--text-normal) 55%, transparent);
+  --pele-muted: var(--text-muted);
+  --pele-accent: var(--text-accent, #0e6e63);
+}
+
+/* 层带：属性面板那张圆角卡片。Pele 默认给 0.5 透明度，这里关掉 */
+.pele-render.pele-onepage .pele-cluster > rect {
+  rx: 10px !important;
+  fill-opacity: 1 !important;
+  stroke-width: 1;
+}
+
+/* 层带标题：照「笔记属性」那行字 */
+.pele-render.pele-onepage .pele-cluster-label {
+  fill: var(--text-normal) !important;
+  opacity: 1 !important;
+  font-weight: 500;
+  font-size: 13px;
+}
+
+/* 层带标题下面 Pele 还画了一层描边光晕，深色下会显成重影 */
+.pele-render.pele-onepage .pele-cluster-titles text:not(.pele-cluster-label) {
+  display: none !important;
+}
+
+/* 元素：八种形状统一描边与圆角 */
+.pele-render.pele-onepage .pele-node > rect,
+.pele-render.pele-onepage .pele-node > ellipse,
+.pele-render.pele-onepage .pele-node > polygon,
+.pele-render.pele-onepage .pele-node > path {
+  rx: 6px !important;
+  stroke: color-mix(in srgb, var(--text-muted) 30%, transparent);
+  stroke-width: 1;
+}
+
+.pele-render.pele-onepage .pele-node .pele-label {
+  font-weight: 400;
+}
+
+/* 重点节点：源码写 A["卡点"]:::key，做成标签样式
+   强调色 10% 淡染底、30% 外框、字用强调色 */
+.pele-render.pele-onepage .pele-node.key > rect,
+.pele-render.pele-onepage .pele-node.key > ellipse,
+.pele-render.pele-onepage .pele-node.key > polygon {
+  rx: 8px !important;
+  fill: color-mix(in srgb, var(--text-accent, #0e6e63) 10%, transparent);
+  stroke: color-mix(in srgb, var(--text-accent, #0e6e63) 30%, transparent);
+  stroke-width: 1;
+}
+
+.pele-render.pele-onepage .pele-node.key .pele-label {
+  fill: var(--text-accent, #0e6e63) !important;
+  font-weight: 400;
+}
+
+/* 主链路：Pele 的加粗连线（==>）连箭头一起染成强调色 */
+.pele-render.pele-onepage .pele-edge path[stroke-width] {
+  stroke: var(--text-accent, #0e6e63);
+  stroke-width: 1.8;
+}
+
+.pele-render.pele-onepage .pele-edge:has(path[stroke-width]) .pele-marker {
+  fill: var(--text-accent, #0e6e63);
+}
+
+/* 连线标签的底框用页面色，只用来遮住穿过的线 */
+.pele-render .pele-edge-label rect {
+  fill: var(--pele-bg, var(--background-primary)) !important;
+}
+
+/* ---------- 缩放控件 ---------- */
+
+.pele-render .pele-zoombox {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  padding: 2px;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 6px;
+  background: var(--background-primary);
+  opacity: 0.2;
+  transition: opacity 0.15s ease;
+}
+
+.pele-render:hover .pele-zoombox,
+.pele-render .pele-zoombox:hover {
+  opacity: 1;
+}
+
+.pele-render .pele-zoombox button {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.pele-render .pele-zoombox button:hover {
+  background: var(--background-modifier-hover);
+  color: var(--text-normal);
+}
+
+/* ---------- 报错 ---------- */
+
+.pele-render-error {
+  border-left: 3px solid var(--text-error);
+  padding: 6px 10px;
+  background: var(--background-secondary);
+  border-radius: 4px;
+}
+
+.pele-render-error-tip {
+  color: var(--text-error);
+  font-size: var(--font-ui-small);
+  margin-bottom: 4px;
+}
+
+.pele-render-error pre {
+  margin: 0;
+  overflow-x: auto;
+}
